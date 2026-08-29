@@ -1,0 +1,89 @@
+name: Continuous
+
+on: [push]
+
+jobs:
+
+  linux-mac:
+    strategy:
+      matrix:
+        cfg: [{os: ubuntu-latest, cxx: g++-13},
+              # get clang 16 ! because we need C++20 support
+              {os: macos-latest, cxx: /opt/homebrew/opt/llvm@20/bin/clang++}]
+        config: [Release, Debug]
+
+    runs-on:  ${{ matrix.cfg.os }}
+
+    env:
+      CXX: ${{ matrix.cfg.cxx }}
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install Clang 20 (macOS)
+      if: matrix.cfg.os == 'macos-latest'
+      run: |
+        brew update
+        brew install llvm@20
+        brew install glfw
+        brew install lua  # Adjust version or formula as needed
+
+    - name: Install dependencies
+      if: matrix.cfg.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        # Install GLFW development packages
+        # sudo apt-get install -y libglfw3-dev
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+
+    - name: CMake Build
+      run: cmake --build build --parallel
+
+    - name: Create archive
+      if: ${{ github.ref_type == 'tag' }}
+      run: tar -czvf webgpu_template_${{ matrix.cfg.os }}.tar.gz build/*
+
+    -
+      name: Deploy
+      uses: xresloader/upload-to-github-release@v1
+      with:
+        tags: true
+        draft: false
+        file: webgpu_template_${{ matrix.cfg.os }}.tar.gz
+        overwrite: false
+        update_latest_release: true
+        verbose: true
+
+
+  windows-msvc:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Configure CMake
+      run: cmake -B build
+
+    - name: Release build
+      run: cmake --build build --parallel --config Release
+
+    - name: Create archive
+      if: ${{ github.ref_type == 'tag' }}
+      run: Compress-Archive -Path build/Release/* -Destination webgpu_template_win.zip
+
+    -
+      name: Deploy
+      uses: xresloader/upload-to-github-release@v1
+      with:
+        tags: true
+        draft: false
+        file: webgpu_template_win.zip
+        overwrite: false
+        update_latest_release: true
+        verbose: true

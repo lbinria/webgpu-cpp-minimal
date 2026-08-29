@@ -21,4 +21,4 @@ Eventually install if missing:
 
 # Build & Run
 
-`cmake -B build && cmake --build build --parallel && ./build/webgpu_template`
+`cmake -B build && cmake --build build --parallel && ./build/webgpu_cpp_minimal`

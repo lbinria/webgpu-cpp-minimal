@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.2.3)
-project(webgpu_template CXX)
+project(webgpu_cpp_minimal CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_BUILD_RPATH_USE_ORIGIN TRUE)
