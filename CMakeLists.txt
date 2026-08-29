@@ -33,6 +33,9 @@ endif()
 add_subdirectory(third_party/WebGPU/WebGPU-distribution-wgpu-v0.19.4.1)
 add_subdirectory(third_party/glfw3webgpu)
 
+# Avoid GLFW to include OpenGL headers by default
+target_compile_definitions(glfw3webgpu PRIVATE GLFW_INCLUDE_NONE)
+
 file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
     "${PROJECT_SOURCE_DIR}/src/*.cpp"
     "${PROJECT_SOURCE_DIR}/src/*.cxx"
@@ -47,6 +50,8 @@ add_executable(${PROJECT_NAME}
     ${PROJECT_SOURCES}
     ${PROJECT_HEADERS}
 )
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE GLFW_INCLUDE_NONE)
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     "${PROJECT_SOURCE_DIR}/src"

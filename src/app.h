@@ -1,6 +1,6 @@
 #pragma once
 
-// 1. Enable native platform extensions for GLFW
+// Enable native platform extensions for GLFW
 #define GLFW_EXPOSE_NATIVE_WAYLAND
 #define GLFW_EXPOSE_NATIVE_X11
 #include <GLFW/glfw3.h>
