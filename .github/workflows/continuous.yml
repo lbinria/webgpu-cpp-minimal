@@ -33,23 +33,28 @@ jobs:
         brew update
         brew install llvm@20
         brew install glfw
-        brew install lua  # Adjust version or formula as needed
 
     - name: Install dependencies
       if: matrix.cfg.os == 'ubuntu-latest'
       run: |
         sudo apt-get update
         # Install GLFW development packages
-        # sudo apt-get install -y libglfw3-dev
+        sudo apt-get install -y \
+          libx11-dev \
+          libxrandr-dev \
+          libxinerama-dev \
+          libxcursor-dev \
+          libxi-dev \
+          libxext-dev \
+          libwayland-dev \
+          wayland-protocols \
+          libxkbcommon-dev
 
     - name: Configure CMake
       # Deactivate wayland for the moment but maybe use
       #     sudo apt-get update
       # sudo apt-get install -y \
       #   libglfw3-dev \
-      #   libwayland-dev \
-      #   wayland-protocols \
-      #   libxkbcommon-dev
       run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.config }} -DGLFW_BUILD_WAYLAND=OFF
 
     - name: CMake Build
