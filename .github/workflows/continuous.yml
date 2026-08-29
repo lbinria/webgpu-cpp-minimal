@@ -43,7 +43,14 @@ jobs:
         # sudo apt-get install -y libglfw3-dev
 
     - name: Configure CMake
-      run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.config }}
+      # Deactivate wayland for the moment but maybe use
+      #     sudo apt-get update
+      # sudo apt-get install -y \
+      #   libglfw3-dev \
+      #   libwayland-dev \
+      #   wayland-protocols \
+      #   libxkbcommon-dev
+      run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.config }} -DGLFW_BUILD_WAYLAND=OFF
 
     - name: CMake Build
       run: cmake --build build --parallel
