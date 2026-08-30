@@ -74,12 +74,16 @@ jobs:
           libxi6 \
           mesa-vulkan-drivers
 
-    - name: Run WebGPU app
+    - name: Run WebGPU app x11 server
       if: matrix.cfg.os == 'ubuntu-latest'
       run: |
         xvfb-run -a \
           --server-args="-screen 0 1280x720x24" \
           ./build/webgpu_cpp_minimal --ci-test
+
+    - name: Run WebGPU app mac os
+      if: matrix.cfg.os == 'macos-latest'
+      run: ./build/webgpu_cpp_minimal --ci-test
 
     - name: Create archive
       if: ${{ github.ref_type == 'tag' }}
