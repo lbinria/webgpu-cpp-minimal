@@ -9,9 +9,9 @@ jobs:
       matrix:
         cfg: [
               # need clang 16 min for C++20 support
-              # macos-13 for intel macos runner
+              # macos-15-intel for intel macos runner
               # macos-14 for apple silicon runner
-              {os: macos-13, cxx: /opt/homebrew/opt/llvm@20/bin/clang++},
+              {os: macos-15-intel, cxx: /opt/homebrew/opt/llvm@20/bin/clang++},
               {os: macos-14, cxx: /opt/homebrew/opt/llvm@20/bin/clang++},]
         config: [Release, Debug]
     
