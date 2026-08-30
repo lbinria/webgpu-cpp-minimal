@@ -1,9 +1,9 @@
 # webgpu-cpp-minimal
 
-A minimal, cross-platform WebGPU application built in C++ using the `webgpu-native` implementation.
+A minimal, cross-platform WebGPU application built in C++ using the `wgpu-native` implementation.
 
-A minimal webgpu app in C++ using webgpu-native.
-This project shows how to create a simple and minimal application with webgpu using webgpu-native implementation in C++.
+A minimal webgpu app in C++ using wgpu-native.
+This project shows how to create a simple and minimal application with webgpu using wgpu-native implementation in C++.
 It contains CI / CD that enable to build and run this app on windows, linux and macOS.
 
 ![triangle](./triangle.png)
