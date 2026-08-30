@@ -9,8 +9,7 @@ jobs:
       matrix:
         cfg: [{os: ubuntu-latest, cxx: g++-13},
               # get clang 16 ! because we need C++20 support
-              # {os: macos-latest, cxx: /opt/homebrew/opt/llvm@20/bin/clang++}]
-              ]
+              {os: macos-latest, cxx: /opt/homebrew/opt/llvm@20/bin/clang++}]
         config: [Release, Debug]
 
     runs-on:  ${{ matrix.cfg.os }}
@@ -49,7 +48,7 @@ jobs:
           libxext-dev \
           libwayland-dev \
           wayland-protocols \
-          libxkbcommon-dev
+          libxkbcommon-dev \
 
     - name: Configure CMake
       
@@ -62,8 +61,25 @@ jobs:
     - name: CMake Build
       run: cmake --build build --parallel
 
-    - name: Run 
-      run: ./build/webgpu_cpp_minimal
+    - name: Install GLFW runtime dependencies
+      if: matrix.cfg.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          xvfb \
+          libx11-6 \
+          libxrandr2 \
+          libxinerama1 \
+          libxcursor1 \
+          libxi6 \
+          mesa-vulkan-drivers
+
+    - name: Run WebGPU app
+      if: matrix.cfg.os == 'ubuntu-latest'
+      run: |
+        xvfb-run -a \
+          --server-args="-screen 0 1280x720x24" \
+          ./build/webgpu_cpp_minimal --ci-test
 
     - name: Create archive
       if: ${{ github.ref_type == 'tag' }}
