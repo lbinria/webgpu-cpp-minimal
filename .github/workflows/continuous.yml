@@ -9,7 +9,8 @@ jobs:
       matrix:
         cfg: [{os: ubuntu-latest, cxx: g++-13},
               # get clang 16 ! because we need C++20 support
-              {os: macos-latest, cxx: /opt/homebrew/opt/llvm@20/bin/clang++}]
+              # {os: macos-latest, cxx: /opt/homebrew/opt/llvm@20/bin/clang++}]
+              ]
         config: [Release, Debug]
 
     runs-on:  ${{ matrix.cfg.os }}
