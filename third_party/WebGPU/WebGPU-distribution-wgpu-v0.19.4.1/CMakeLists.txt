@@ -31,6 +31,16 @@ else (EMSCRIPTEN)
 		endif()
 	endif()
 
+	if(ARCH MATCHES "^(arm64|aarch64)$")
+		set(WGPU_MACOS_ARCH "aarch64")
+	elseif(ARCH MATCHES "^(x86_64|AMD64)$")
+		set(WGPU_MACOS_ARCH "x86_64")
+	else()
+		message(FATAL_ERROR
+			"Unsupported macOS architecture: ${ARCH}"
+		)
+	endif()
+
 	# A pre-compiled target (IMPORTED) that is a dynamically
 	# linked library (SHARED, meaning .dll, .so or .dylib).
 	add_library(webgpu SHARED IMPORTED GLOBAL)
@@ -62,7 +72,18 @@ else (EMSCRIPTEN)
 
 	elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 
-		set(WGPU_RUNTIME_LIB ${WGPU}/bin/macos-${ARCH}/libwgpu_native.dylib)
+
+
+		set(WGPU_RUNTIME_LIB
+			"${WGPU}/bin/macos-${WGPU_MACOS_ARCH}/libwgpu_native.dylib"
+		)
+
+		if(NOT EXISTS "${WGPU_RUNTIME_LIB}")
+			message(FATAL_ERROR
+				"WebGPU runtime library not found: ${WGPU_RUNTIME_LIB}"
+			)
+		endif()
+
 		set_target_properties(
 			webgpu
 			PROPERTIES

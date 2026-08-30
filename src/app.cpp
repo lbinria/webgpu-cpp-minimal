@@ -110,7 +110,7 @@ bool App::init() {
 	// Create window
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-	window = glfwCreateWindow(screenWidth, screenHeight, "webgpu test", nullptr, nullptr);
+	window = glfwCreateWindow(screenWidth, screenHeight, "webgpu cpp minimal", nullptr, nullptr);
 
 	if (!window) {
 		std::cerr << "Could not create window!" << std::endl;

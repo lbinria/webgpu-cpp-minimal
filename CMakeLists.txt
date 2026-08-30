@@ -61,6 +61,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # In both cases, we can now link to the 'glfw' target
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw webgpu glfw3webgpu)
 
+# On linux / mac use standard math lib
 if (NOT WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE m)
 endif()
