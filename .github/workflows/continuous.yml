@@ -51,14 +51,18 @@ jobs:
           libxkbcommon-dev
 
     - name: Configure CMake
-      # Deactivate wayland for the moment but maybe use
+      
       #     sudo apt-get update
       # sudo apt-get install -y \
       #   libglfw3-dev \
+      # Deactivate wayland for the moment but maybe use
       run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.config }} -DGLFW_BUILD_WAYLAND=OFF
 
     - name: CMake Build
       run: cmake --build build --parallel
+
+    - name: Run 
+      run: ./build/webgpu_cpp_minimal
 
     - name: Create archive
       if: ${{ github.ref_type == 'tag' }}
