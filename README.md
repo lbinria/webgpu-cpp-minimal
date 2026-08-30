@@ -19,6 +19,13 @@ It contains CI / CD that enable to build and run this app on windows, linux and 
     - Packages and publishes build artifacts when a tag is created
     - Run app to verify that it is working properly
 
+# Dependencies
+
+This project is built using the following core dependencies:
+
+ - [WebGPU Distribution](https://github.com/eliemichel/WebGPU-distribution) (v0.2.0, powered by wgpu-native v0.19.4.1)
+ - [GLFW WebGPU Extension](https://github.com/eliemichel/glfw3webgpu) (v1.2.0)
+
 # Linux (Debian / Ubuntu)
 
 ## Prerequisites
