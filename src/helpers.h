@@ -137,19 +137,112 @@ WGPUTextureView getNextSurfaceTextureView(WGPUSurface surface) {
 	return targetView;
 }
 
-void printInfos(WGPUAdapter adapter) {
-	WGPUSupportedLimits supportedLimits = {};
-	supportedLimits.nextInChain = nullptr;
-	bool success = wgpuAdapterGetLimits(adapter, &supportedLimits); 
+// const char* vendorName(uint32_t vendorID)
+// {
+//     switch (vendorID) {
+//         case 0x10DE:
+//             return "NVIDIA";
 
-	// Display adapter limits
-	if (success) {
-		std::cout << "Adapter limits:" << std::endl;
-		std::cout << " - maxTextureDimension1D: " << supportedLimits.limits.maxTextureDimension1D << std::endl;
-		std::cout << " - maxTextureDimension2D: " << supportedLimits.limits.maxTextureDimension2D << std::endl;
-		std::cout << " - maxTextureDimension3D: " << supportedLimits.limits.maxTextureDimension3D << std::endl;
-		std::cout << " - maxTextureArrayLayers: " << supportedLimits.limits.maxTextureArrayLayers << std::endl;
-	}
+//         case 0x1002:
+//             return "AMD";
+
+//         case 0x8086:
+//             return "Intel";
+
+//         case 0x106B:
+//             return "Apple";
+
+//         case 0x13B5:
+//             return "Arm";
+
+//         case 0x5143:
+//             return "Qualcomm";
+
+//         case 0x1414:
+//             return "Microsoft / software adapter";
+
+//         case 0x10005:
+//             return "Mesa software renderer";
+
+//         default:
+//             return "Unknown";
+//     }
+// }
+
+const char* featureName(WGPUFeatureName feature)
+{
+    switch (feature) {
+        case WGPUFeatureName_DepthClipControl:
+            return "DepthClipControl";
+
+        case WGPUFeatureName_Depth32FloatStencil8:
+            return "Depth32FloatStencil8";
+
+        case WGPUFeatureName_TimestampQuery:
+            return "TimestampQuery";
+
+        case WGPUFeatureName_TextureCompressionBC:
+            return "TextureCompressionBC";
+
+        case WGPUFeatureName_TextureCompressionETC2:
+            return "TextureCompressionETC2";
+
+        case WGPUFeatureName_TextureCompressionASTC:
+            return "TextureCompressionASTC";
+
+        case WGPUFeatureName_IndirectFirstInstance:
+            return "IndirectFirstInstance";
+
+        case WGPUFeatureName_ShaderF16:
+            return "ShaderF16";
+
+        case WGPUFeatureName_RG11B10UfloatRenderable:
+            return "RG11B10UfloatRenderable";
+
+        case WGPUFeatureName_BGRA8UnormStorage:
+            return "BGRA8UnormStorage";
+
+        case WGPUFeatureName_Float32Filterable:
+            return "Float32Filterable";
+
+        default:
+            return "Unknown";
+    }
+}
+
+const char* backendName(WGPUBackendType backend)
+{
+    switch (backend) {
+        case WGPUBackendType_Null:
+            return "Null";
+
+        case WGPUBackendType_WebGPU:
+            return "WebGPU";
+
+        case WGPUBackendType_D3D11:
+            return "Direct3D 11";
+
+        case WGPUBackendType_D3D12:
+            return "Direct3D 12";
+
+        case WGPUBackendType_Metal:
+            return "Metal";
+
+        case WGPUBackendType_Vulkan:
+            return "Vulkan";
+
+        case WGPUBackendType_OpenGL:
+            return "OpenGL";
+
+        case WGPUBackendType_OpenGLES:
+            return "OpenGL ES";
+
+        default:
+            return "Unknown";
+    }
+}
+
+void printInfos(WGPUAdapter adapter) {
 
 	WGPUAdapterProperties properties = {};
 	properties.nextInChain = nullptr;
@@ -159,28 +252,26 @@ void printInfos(WGPUAdapter adapter) {
 	std::cout << "Adapter properties:" << std::endl;
 	std::cout << " - vendorID: " << properties.vendorID << std::endl;
 
-	if (properties.vendorName) {
-		std::cout << " - vendorName: " << properties.vendorName << std::endl;
-	}
+	std::cout << " - vendorName: " << (properties.vendorName ? properties.vendorName : "unknown") << std::endl;
 
 	if (properties.architecture) {
 		std::cout << " - architecture: " << properties.architecture << std::endl;
 	}
 
 	std::cout << " - deviceID: " << properties.deviceID << std::endl;
-
-	if (properties.name) {
-		std::cout << " - name: " << properties.name << std::endl;
-	}
+	std::cout << " - Adapter: " << (properties.name ? properties.name : "unknown") << std::endl;
 
 	if (properties.driverDescription) {
 		std::cout << " - driverDescription: " << properties.driverDescription << std::endl;
 	}
 
-	std::cout << std::hex;
-	std::cout << " - adapterType: 0x" << properties.adapterType << std::endl;
-	std::cout << " - backendType: 0x" << properties.backendType << std::endl;
-	std::cout << std::dec; // Restore decimal numbers
+	// std::cout << std::hex;
+	// std::cout << " - adapterType: 0x" << properties.adapterType << std::endl;
+	// std::cout << " - backendType: 0x" << properties.backendType << std::endl;
+	// std::cout << std::dec; // Restore decimal numbers
+
+	
+	std::cout << "Backend: " << backendName(properties.backendType) << std::endl;
 
 	std::vector<WGPUFeatureName> features;
 
@@ -198,9 +289,23 @@ void printInfos(WGPUAdapter adapter) {
 	std::cout << "Adapter features:" << std::endl;
 	std::cout << std::hex; // Write integers as hexadecimal to ease comparison with webgpu.h literals
 	for (auto f : features) {
-		std::cout << " - 0x" << f << std::endl;
+		std::cout << " - " << "0x" << static_cast<unsigned int>(f) << "-" << featureName(f) << std::endl;
 	}
 	std::cout << std::dec; // Restore decimal numbers
+
+
+	WGPUSupportedLimits supportedLimits = {};
+	supportedLimits.nextInChain = nullptr;
+	bool success = wgpuAdapterGetLimits(adapter, &supportedLimits); 
+
+	// Display adapter limits
+	if (success) {
+		std::cout << "Adapter limits:" << std::endl;
+		std::cout << " - maxTextureDimension1D: " << supportedLimits.limits.maxTextureDimension1D << std::endl;
+		std::cout << " - maxTextureDimension2D: " << supportedLimits.limits.maxTextureDimension2D << std::endl;
+		std::cout << " - maxTextureDimension3D: " << supportedLimits.limits.maxTextureDimension3D << std::endl;
+		std::cout << " - maxTextureArrayLayers: " << supportedLimits.limits.maxTextureArrayLayers << std::endl;
+	}
 }
 
 // We also add an inspect device function:
