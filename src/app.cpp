@@ -71,7 +71,18 @@ bool App::init() {
 	std::cout << "WGPU instance: " << instance << std::endl;
 
 	// GLFW !
-	glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11); // Force X11, just to avoid to crash on wayland
+
+	// Force X11 on linux, just to avoid to crash on wayland
+	// Normally, we should let glfw choose platform automatically
+	// but I made this quick & dirty fix for now waiting a better solution
+	#if defined(_WIN32)
+	glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_WIN32);
+	#elif defined(__linux__)
+	glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_X11); 
+	#elif defined(__APPLE__)
+	glfwInitHint(GLFW_PLATFORM, GLFW_PLATFORM_COCOA);
+	#endif 
+
 	if (!glfwInit()) {
 		std::cerr << "Could not initialize GLFW!" << std::endl;
 		return false;
