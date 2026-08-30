@@ -2,6 +2,8 @@
 
 A starter template for building native WebGPU applications in C++.
 
+![triangle](./triangle.png)
+
 # Features
 
  - GLFW-based window creation
@@ -14,6 +16,8 @@ A starter template for building native WebGPU applications in C++.
 
 
 # Prerequisites
+
+## Linux (Debian / Ubuntu)
 
 Eventually install if missing:
 
